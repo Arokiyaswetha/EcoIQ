@@ -1,0 +1,27 @@
+plt.figure(figsize=(10, 10))
+for images, labels in validation.take(1):
+    # Predict the labels for the batch of images
+    predictions = model.predict(images)
+    predicted_labels = tf.argmax(predictions, axis=1)
+    
+    for i in range(9):
+        ax = plt.subplot(3, 3, i + 1)
+        plt.imshow(images[i].numpy().astype("uint8"))
+        
+        true_label_index = tf.argmax(labels[i]).numpy()  # Get the index of the highest value (true class)
+        predicted_label_index = predicted_labels[i].numpy()  # Get the index of the highest value (predicted class)
+        
+        true_label_name = classes[true_label_index]
+        predicted_label_name = classes[predicted_label_index]
+        
+        plt.title(f'True: {true_label_name}\nPred: {predicted_label_name}')
+        plt.axis("off")
+
+plt.show()
+
+
+
+model.save("resNet_95.7.h5")
+
+# Load the model with custom objects
+loaded_model = tf.keras.models.load_model("resNet_95.7.h5")
