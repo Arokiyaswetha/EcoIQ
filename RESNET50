@@ -1,0 +1,59 @@
+# Define the input image shape with (3,) meaning RGB structure of the image.
+IMG_SHAPE = IMG_SIZE + (3,)
+
+# Loading the ResNet50 model without the top(dense layer), including the imagenet weights
+base_model = ResNet50(input_shape=IMG_SHAPE,include_top=False, weights='imagenet')
+
+# Trainable model to fine tune the layers
+base_model.trainable = True  # Enable fine-tuning
+
+# Freeze layers up to the 150th layer leaving the rest to be trained.
+fine_tune_at = 150
+for layer in base_model.layers[:fine_tune_at]:
+    layer.trainable = False
+
+
+
+# Check Model Layers without the Top (Dense Layer)
+
+no_layers = len(base_model.layers)
+print("Number of layers without the top:", no_layers)
+
+
+
+# Number Of Taregt Classes
+print("Number of classes: ",len(classes))
+
+
+
+# Create the Sequential model in order to save it on .h5 format
+model = Sequential()
+
+# Data Augmentation Layers
+#model.add(RandomFlip('horizontal', input_shape=input_shape))
+#model.add(RandomRotation(0.2))
+#model.add(RandomZoom(0.2))
+#model.add(RandomContrast(0.2))
+
+# Add the base model to Sequential
+model.add(base_model)
+
+# Add feature extraction parts (pooling, dropout, and output layers) 
+model.add(GlobalAveragePooling2D())
+model.add(Dropout(dropout_rate)) # dropout_rate as we mentioned above
+model.add(Dense(units=len(classes), kernel_regularizer=l2(0.01), activation='softmax'))
+
+
+
+# Compile the model
+model.compile(optimizer=Adam(learning_rate=learning_rate),
+              loss=CategoricalCrossentropy(from_logits=False),  # Set from_logits to False for softmax
+              metrics=['accuracy'])
+
+# Display the model summary
+model.summary()
+
+
+history = model.fit(train ,epochs=15, validation_data = validation, verbose=1,
+
+     )
