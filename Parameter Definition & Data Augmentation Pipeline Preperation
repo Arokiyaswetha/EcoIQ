@@ -1,0 +1,34 @@
+# Automatically tune the performance by adjusting the buffer size for optimal data prefetching
+AUTOTUNE = tf.data.experimental.AUTOTUNE
+
+# Prefetch the data to improve performance by overlapping data preprocessing and model training
+# This helps reduce the idle time during training
+train = train.prefetch(buffer_size=AUTOTUNE)
+
+# Preprocessing function for the input image data, specific to the ResNet50 model
+# It ensures the input data is in the correct format for ResNet50 (e.g., scaling pixel values)
+preprocess_input = tf.keras.applications.resnet50.preprocess_input
+
+
+# Define the path to the images folder within the Kaggle environment
+# This path will be used to load the dataset from a directory
+path = "/kaggle/input/recyclable-and-household-waste-classification/images/images"
+
+# Define the batch size for loading data
+# Batching helps in efficiently training the model by processing images in batches rather than individually
+BATCH_SIZE = 32
+
+# Define the target image size for resizing images before feeding them into the model
+# This ensures all images have consistent dimensions for training (224x224 is the standard for many models like ResNet)
+IMG_SIZE = (224, 224)
+
+# Dropout rate specifies the fraction of input units to drop during training.
+# A rate of 0.5 means 50% of the units will be randomly set to zero during training to prevent overfitting.
+dropout_rate = 0.5
+
+# Learning rate defines the step size used during the optimization process.
+# A learning rate of 0.001 is commonly used for models like ResNet and helps the model converge slowly but steadily.
+learning_rate = 0.001
+
+# Define the input shape for the model, combining the image size and the number of color channels
+input_shape = IMG_SIZE + (3,)
