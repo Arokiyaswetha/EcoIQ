@@ -1,0 +1,45 @@
+categories = os.listdir("/kaggle/input/recyclable-and-household-waste-classification/images/images")
+path = "/kaggle/input/recyclable-and-household-waste-classification/images/images"
+categories
+
+
+
+BATCH_SIZE = 32
+IMG_SIZE = (224, 224)
+
+
+# Define the training dataset
+train = image_dataset_from_directory(
+    path,
+    labels='inferred',  # Automatically infers labels from subdirectory names
+    label_mode='categorical',  # Return labels as one-hot encoded vectors
+    shuffle=True,
+    batch_size=BATCH_SIZE,
+    image_size=IMG_SIZE,
+    validation_split=0.2,  # 20% for validation
+    subset='training',
+    seed=42
+)
+
+# Define the validation dataset
+validation = image_dataset_from_directory(
+    path,
+    labels='inferred',  # Automatically infers labels from subdirectory names
+    label_mode='categorical',  # Return labels as one-hot encoded vectors
+    shuffle=True,
+    batch_size=BATCH_SIZE,
+    image_size=IMG_SIZE,
+    validation_split=0.2,  # 20% for validation
+    subset='validation',
+    seed=42
+)
+
+
+classes = train.class_names
+classes
+
+
+for images, labels in train.take(1):
+    print("Image batch shape: ", images.shape)
+    print("Label batch shape: ", labels.shape)
+    print("Labels: ", labels.numpy())
