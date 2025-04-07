@@ -41,3 +41,9 @@ predicted_class = np.argmax(predictions, axis=1)  # Get the index of the highest
 predicted_probability = np.max(predictions, axis=1)  # Get the highest probability
 
 print(f"Predicted class: {predicted_class}, Probability: {predicted_probability}")
+
+
+predicted_class
+
+for i,class_ in enumerate(classes):
+    print(f"{i}: {class_}")
